@@ -101,32 +101,32 @@ struct Node
 class Solution
 {
 public:
-    void inorder(Node* root, vector<int>&temp){
-        if(root==NULL)return;
-        inorder(root->left,temp);
-        temp.push_back(root->data);
-        inorder(root->right,temp);
-    }
-    int countPairs(Node* root1, Node* root2, int x)
-    {
-        vector<int>temp1,temp2;
-        inorder(root1,temp1);
-        inorder(root2,temp2);
-        int i=0,j=temp2.size()-1,ans=0;
-        while(i<temp1.size() && j>=0){
-            if(temp1[i]+temp2[j]==x){
-                ans++;
-                i++;
-                j--;
-            }
-            else if(temp1[i]+temp2[j]>x)j--;
-            else i++;
-        }
-        return ans;
-    }
+    int ans=0; // Global Variable to hold the ans 
+void find(Node* root, unordered_set<int> &s, int x)
+{
+   if(root==NULL)
+   return;
+   if(s.find(x-root->data)!=s.end())
+   ans++;
+   find(root->left, s, x);
+   find(root->right, s, x);
+}
+void fill2nd(Node* root, unordered_set<int>& s)
+{
+   if(root==NULL)
+   return;
+   s.insert(root->data);
+   fill2nd(root->left, s);
+   fill2nd(root->right, s);
+}
+   int countPairs(Node* root1, Node* root2, int x)
+   {
+       unordered_set<int> s;
+       fill2nd(root2, s);
+       find(root1, s, x);
+       return ans;
+   }
 };
-
-
 
 
 //{ Driver Code Starts.
